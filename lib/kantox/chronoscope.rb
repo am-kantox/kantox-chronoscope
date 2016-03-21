@@ -46,7 +46,7 @@ module Kantox
           klazz.class_eval %Q|
             alias_method '∃#{m}', '#{m}'
             def #{m} *args
-              ⌚('#{m}') { ∃#{m}(*args) }
+              ⌚('#{klazz}##{m}') { ∃#{m}(*args) }
             end
           |
         end
