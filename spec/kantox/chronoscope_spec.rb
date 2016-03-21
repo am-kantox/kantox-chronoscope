@@ -34,7 +34,7 @@ describe Kantox::Chronoscope do
     result = ⌛
     expect(result).to match "sleep_sec"
     expect(result).to match "total"
-    expect(result).to match "0.30"
+    expect(result).to match "0.3"
   end
 
   it 'can attach to all methods of a class' do
@@ -44,7 +44,7 @@ describe Kantox::Chronoscope do
     expect(result).to match "sleep_sec"
     expect(result).to match "sleep_three_secs"
     expect(result).to match "total"
-    expect(result).to match "0.30"
+    expect(result).to match "0.3"
   end
 
   it 'can distinguish methods with same names from different classes' do
@@ -56,8 +56,8 @@ describe Kantox::Chronoscope do
     expect(result).to match "sleep_sec"
     expect(result).to match "sleep_three_secs"
     expect(result).to match "total"
-    expect(result).to match "0.30"
-    expect(result).to match "0.50"
-    expect(result).to match "1.60"
+    expect(result).to match "0.3"
+    expect(result).to match "0.5"
+    expect(result).to match "1.6"
   end
 end
