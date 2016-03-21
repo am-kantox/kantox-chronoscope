@@ -1,0 +1,3 @@
+general:
+  handler: 'Kantox::Chronoscope::Generic'
+  enable: true
