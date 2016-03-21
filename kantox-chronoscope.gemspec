@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['aleksei.matiushkin@kantox.com']
 
   spec.summary       = 'Handy profiler for rspec.'
-  spec.description   = 'Allows easy and quick profile method calls during rspec execution.'
+  spec.description   = 'Allows to easy and quick profile method calls during rspec execution.'
   spec.homepage      = "https://github.com/am-kantox/#{spec.name}"
   spec.license       = 'MIT'
 
