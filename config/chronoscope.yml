@@ -1,3 +1,9 @@
 general:
   handler: 'Kantox::Chronoscope::Generic'
   enable: true
+
+i18n:
+  name: метод
+  times: раз
+  average: среднее
+  total: всего

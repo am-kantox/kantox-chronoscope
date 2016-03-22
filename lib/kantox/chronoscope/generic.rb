@@ -91,19 +91,29 @@ module Kantox
         end
 
         method_len = [@@chronoscope_data.keys.max_by(&:length).length, 5].max + 2
+        times_len = [TIMES_LABEL.length, 6].max
+        average_len = [AVERAGE_LABEL.length, 8].max
         total = @@chronoscope_data.values.map { |v| v[:total] }.inject(:+).round(5)
 
         [
           '',
           delim_label.first,
-          "#{METHOD_LABEL.rjust(method_len, ' ')}#{ARROW}#{TIMES_LABEL}#{BM_DELIMITER}#{AVERAGE_LABEL}#{BM_DELIMITER}#{TOTAL_LABEL}",
+          [
+            METHOD_LABEL.rjust(method_len, ' '),
+            ARROW,
+            TIMES_LABEL.rjust(times_len, ' '),
+            BM_DELIMITER,
+            AVERAGE_LABEL.ljust(average_len, ' '),
+            BM_DELIMITER,
+            TOTAL_LABEL
+          ].join,
           (@@chronoscope_data.sort_by { |_, v| -v[:total] }.take(count).map do |what, bms|
             [
               "#{COLOR_PALE}#{what.rjust(method_len, ' ')}#{COLOR_NONE}",
               ARROW,
-              "#{COLOR_VIVID}#{bms[:count].to_s.rjust(5, ' ')}#{COLOR_NONE}",
+              "#{COLOR_VIVID}#{bms[:count].to_s.rjust(times_len, ' ')}#{COLOR_NONE}",
               BM_DELIMITER,
-              "#{COLOR_VIVID}#{(bms[:total] / bms[:count]).round(5)}#{COLOR_NONE}",
+              "#{COLOR_VIVID}#{(bms[:total] / bms[:count]).round(5).to_s.ljust(average_len, ' ')}#{COLOR_NONE}",
               BM_DELIMITER,
               "#{COLOR_VIVID}#{bms[:total].round(5)}#{COLOR_NONE}"
             ].join
