@@ -24,3 +24,7 @@ Style/ClassVars:
 Metrics/ModuleLength:
   Exclude:
     - 'lib/kantox/chronoscope/generic.rb'
+
+Style/SpecialGlobalVars:
+  Exclude:
+    - 'lib/**/*'

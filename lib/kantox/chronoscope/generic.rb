@@ -26,7 +26,6 @@ module Kantox
       # rubocop:disable Style/MethodName
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Style/SpecialGlobalVars
 
       def ⌚(arg = DEFAULT_TAG, log = false)
         return (@@chronoscope_data[arg.to_s] = nil) unless block_given? # pass no block to reset
@@ -139,7 +138,6 @@ module Kantox
       end
 
       protected :log_problem, :log_bm, :log_report, :log_width
-      # rubocop:enable Style/SpecialGlobalVars
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Style/MethodName

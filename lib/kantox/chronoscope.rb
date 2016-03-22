@@ -42,6 +42,7 @@ module Kantox
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
     module ClassMethods
+      #  TODO: Permit monitoring of private methods
       # `methods` parameter accepts:
       #    none for all instance methods
       #    :method for explicit method
@@ -54,17 +55,20 @@ module Kantox
           next if methods.include?("#{CHAIN_PREFIX}#{m}".to_sym) # skip already wrapped functions
           next if (klazz.instance_method(m).parameters.to_h[:block] rescue false) # FIXME: report
 
-          arg_string = m.to_s.end_with?('=') ? 'arg' : '*args' # to satisfy setters
+          receiver, arg_string = m.to_s.end_with?('=') ? ['self.', 'arg'] : [nil, '*args'] # to satisfy setter
 
           klazz.class_eval %Q|
             alias_method :'#{CHAIN_PREFIX}#{m}', :'#{m}'
             def #{m}(#{arg_string})
-              ⌚('#{klazz}##{m}', #{Kantox::Chronoscope.config.options!.silent && false || true}) { self.#{CHAIN_PREFIX}#{m} #{arg_string} }
+              ⌚('#{klazz}##{m}', #{Kantox::Chronoscope.config.options!.silent && false || true}) { #{receiver}#{CHAIN_PREFIX}#{m} #{arg_string} }
             end
           |
         end
       rescue NameError
-        # FIXME: report
+        Generic::LOGGER.debug [
+          "  #{Generic::COLOR_WARN}[#{Generic::LOGGER_TAG}] ERROR#{Generic::COLOR_NONE} #{Generic::BM_DELIMITER} “#{Generic::COLOR_WARN}#{e.message}#{Generic::COLOR_NONE}”",
+          e.backtrace.map { |s| "#{Generic::COLOR_WARN}#{s}#{Generic::COLOR_NONE}" }
+        ].join("#{$/}⮩\t")
       end
     end
     # rubocop:enable Metrics/MethodLength
