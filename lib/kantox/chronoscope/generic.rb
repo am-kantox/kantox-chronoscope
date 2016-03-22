@@ -24,12 +24,11 @@ module Kantox
       @@★ = []
 
       # rubocop:disable Style/MethodName
-      # rubocop:disable Style/OpMethod
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Style/SpecialGlobalVars
 
-      def ⌚(arg = DEFAULT_TAG)
+      def ⌚(arg = DEFAULT_TAG, log = false)
         return (@@chronoscope_data[arg.to_s] = nil) unless block_given? # pass no block to reset
 
         result = nil # needed for it to be defined in this scope
@@ -39,7 +38,7 @@ module Kantox
           (Benchmark.measure { result = yield }).tap do |bm|
             @@chronoscope_data[arg.to_s][:count] += 1
             @@chronoscope_data[arg.to_s][:total] += bm.real
-            LOGGER.debug log_bm arg, bm
+            LOGGER.debug log_bm arg, bm if log
           end
           result
         rescue => e
@@ -122,7 +121,11 @@ module Kantox
             ].join
           end),
           "#{COLOR_PALE}#{'—' * log_width}#{COLOR_NONE}",
-          "#{COLOR_VIVID}#{'total'.rjust(method_len, ' ')}#{COLOR_NONE}#{ARROW}#{' ' * TIMES_LABEL.length}#{COLOR_VIVID}#{total}#{COLOR_NONE}",
+          [
+            "#{COLOR_VIVID}#{'total'.rjust(method_len, ' ')}#{COLOR_NONE}#{ARROW}",
+            ' ' * (times_len + average_len + 2 * BM_DELIMITER.length),
+            "#{COLOR_VIVID}#{total}#{COLOR_NONE}"
+          ].join,
           delim_label.last
         ].flatten.join($/)
 
@@ -139,7 +142,6 @@ module Kantox
       # rubocop:enable Style/SpecialGlobalVars
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
-      # rubocop:enable Style/OpMethod
       # rubocop:enable Style/MethodName
 
       def inject(top = nil)

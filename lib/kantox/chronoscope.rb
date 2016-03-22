@@ -10,7 +10,7 @@ module Kantox
     module Generic; end
     module Dummy; end
 
-    CHAIN_PREFIX = '⚑'
+    CHAIN_PREFIX = '⚑'.freeze
 
     DEFAULT_ENV = :development
     CONFIG_LOCATION = 'config/chronoscope.yml'.freeze
@@ -24,6 +24,7 @@ module Kantox
     require "kantox/chronoscope/dummy"
     require "kantox/chronoscope/generic"
     general_config = option(ENV, :general) || Hashie::Mash.new
+
     chronoscope = if general_config.enable
                     begin
                       Kernel.const_get(general_config.handler)
@@ -57,7 +58,7 @@ module Kantox
           klazz.class_eval %Q|
             alias_method :'#{CHAIN_PREFIX}#{m}', :'#{m}'
             def #{m}(*args)
-              ⌚('#{klazz}##{m}') { #{CHAIN_PREFIX}#{m} *args }
+              ⌚('#{klazz}##{m}', #{Kantox::Chronoscope.config.options!.silent && false || true}) { #{CHAIN_PREFIX}#{m} *args }
             end
           |
         end
