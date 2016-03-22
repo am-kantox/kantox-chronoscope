@@ -2,6 +2,16 @@
 
 [![Build Status](https://travis-ci.org/am-kantox/kantox-chronoscope.svg?branch=master)](https://travis-ci.org/am-kantox/kantox-chronoscope)
 
+`Chronoscope` is designed for those, who has not enough foresight and starts
+benchmarking/profiling their applications when everything already is terrible.
+
+On the other hand, `Chronoscope` is a lightweight solution, that permits
+to plug in benchmarks for virtually everything in a matter of seconds.
+
+It just works out of the box: no modifications of application code is required.
+It permits benchmarking in production as well, though it is not recommended. The
+total impact on productivity is proven to be less that 1%.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -20,7 +30,56 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+1. Create the configuration file in `config/chronoscope.yml`:
+
+```yaml
+general:
+  handler: 'Kantox::Chronoscope::Generic'
+  enable: true
+
+options:
+  silent: true
+
+i18n:
+  name: метод
+  times: раз
+  average: среднее
+  total: всего
+```
+
+2. Attach `Chronoscope` to one or more targets:
+
+```ruby
+Kantox::Chronoscope.attach(Order) # all methods of Order
+Kantox::Chronoscope.attach(User, :login) #    User#login
+```
+
+And somewhere in the execution end (e. g. when used with `Rails`, this goes into
+`spec/spec_helper.rb`):
+
+```ruby
+config.after(:suite) do
+  benchmarks = ⌛(cleanup: true)
+end
+```
+
+3. Get the following output:
+
+![Chronoscope log](screenshot.jpg)
+
+Here `silent` options is set to `false`, that’s why we see logs from each subsequent
+call to monitored function.
+
+4. After execution, the result tree (with call hierarchy) is returned as:
+
+```ruby
+puts '—'*($stdin.winsize.last rescue 80)
+puts benchmarks[:data].inspect
+puts '—'*($stdin.winsize.last rescue 80)
+#⇒ {"Hedge#send_email_on_create"=>{:count=>26, :total=>0.00013026800000000003, :stack=>[]},
+#   "Hedge#send_email_on_create="=>{:count=>11, :total=>4.066e-05, :stack=>[]},
+#   "Hedge#hedge_type"=>{:count=>188, :total=>0.0024204860000000003, :stack=>[]} ...
+```
 
 ## Development
 

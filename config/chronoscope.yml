@@ -2,6 +2,9 @@ general:
   handler: 'Kantox::Chronoscope::Generic'
   enable: true
 
+options:
+  silent: true
+
 i18n:
   name: метод
   times: раз

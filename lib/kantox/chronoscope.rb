@@ -56,11 +56,12 @@ module Kantox
           next if (klazz.instance_method(m).parameters.to_h[:block] rescue false) # FIXME: report
 
           receiver, arg_string = m.to_s.end_with?('=') ? ['self.', 'arg'] : [nil, '*args'] # to satisfy setter
+          do_log = !option(ENV, 'options.silent')
 
           klazz.class_eval %Q|
             alias_method :'#{CHAIN_PREFIX}#{m}', :'#{m}'
             def #{m}(#{arg_string})
-              ⌚('#{klazz}##{m}', #{Kantox::Chronoscope.config.options!.silent && false || true}) { #{receiver}#{CHAIN_PREFIX}#{m} #{arg_string} }
+              ⌚('#{klazz}##{m}', #{do_log}) { #{receiver}#{CHAIN_PREFIX}#{m} #{arg_string} }
             end
           |
         end
