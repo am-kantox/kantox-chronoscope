@@ -71,7 +71,9 @@ module Kantox
           BM_DELIMITER,
           "#{COLOR_PALE}#{@@chronoscope_data[arg.to_s][:count]}#{COLOR_NONE}",
           BM_DELIMITER,
-          "#{COLOR_VIVID}#{@@chronoscope_data[arg.to_s][:total].round(3)}#{COLOR_NONE}",
+          "#{COLOR_VIVID}#{(@@chronoscope_data[arg.to_s][:total] / @@chronoscope_data[arg.to_s][:count]).round(3)}#{COLOR_NONE}",
+          BM_DELIMITER,
+          "#{COLOR_PALE}#{@@chronoscope_data[arg.to_s][:total].round(3)}#{COLOR_NONE}",
           bm.to_s
         ].join(' ')
       end

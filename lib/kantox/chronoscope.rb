@@ -43,8 +43,8 @@ module Kantox
         methods = klazz.instance_methods(false) if methods.empty?
 
         methods.each do |m|
-          next if m.to_s =~ /\A⚑/ || methods.include?("⚑#{m}".to_sym)   # skip already wrapped functions
-          next if klazz.instance_method(m).parameters.to_h[:block]      # FIXME: report
+          next if m.to_s =~ /\A⚑/ || methods.include?("⚑#{m}".to_sym) # skip already wrapped functions
+          next if (klazz.instance_method(m).parameters.to_h[:block] rescue false) # FIXME: report
 
           klazz.class_eval %Q|
             alias_method '⚑#{m}', '#{m}'

@@ -28,9 +28,39 @@ class Test2
   end
 end
 
+class Test3
+  def simple_params(arg1, arg2)
+    sleep 0.1
+    arg1 + arg2
+  end
+
+  def rest_params(arg, *args)
+    sleep 0.1
+    [arg, *args].inject(&:+)
+  end
+
+  def hash_params(arg, *args, param: 42)
+    sleep 0.1
+    [arg, *args].inject(&:+) + param
+  end
+
+  def splat_params(arg, *args, param: 42, **params)
+    sleep 0.1
+    [arg, *args].inject(&:+) + param + params.values.inject(&:+)
+  end
+
+  # rubocop:disable Performance/RedundantBlockCall
+  def block_params(arg, *args, param: 42, **params, &cb)
+    sleep 0.1
+    [arg, *args].inject(&:+) + param + params.values.inject(&:+) + cb.call
+  end
+  # rubocop:enable Performance/RedundantBlockCall
+end
+
 describe Kantox::Chronoscope do
   let(:test) { Test1 }
   let(:test2) { Test2 }
+  let(:test3) { Test3 }
 
   it 'has a version number' do
     expect(Kantox::Chronoscope::VERSION).not_to be nil
@@ -82,5 +112,17 @@ describe Kantox::Chronoscope do
   it 'handles the exceptions raised from wrapped methods' do
     subject.attach(test2)
     expect { test2.new.raise_error }.to raise_error(ArgumentError)
+  end
+
+  it 'handles any parameter type properly' do
+    subject.attach(test3)
+    inst = test3.new
+    expect(inst.simple_params(1, 2)).to eq(3)
+    expect(inst.rest_params(1, 2, 3, 4)).to eq(10)
+    expect(inst.hash_params(1, 2)).to eq(45)
+    expect(inst.hash_params(1, 2, param: 3)).to eq(6)
+    expect(inst.splat_params(1, 2, a: 3, b: 4)).to eq(52)
+    expect(inst.splat_params(1, 2, param: 3, a: 4)).to eq(10)
+    expect(inst.block_params(1, 2, param: 3, a: 4) { 32 }).to eq(42)
   end
 end
