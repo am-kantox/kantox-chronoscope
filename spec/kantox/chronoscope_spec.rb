@@ -39,7 +39,7 @@ describe Kantox::Chronoscope do
   it 'calculates proper time on sleep_three_sec' do
     subject.attach(test, :sleep_sec)
     test.new.sleep_three_secs
-    result = ⌛
+    result = ⌛[:string]
     expect(result).to match "sleep_sec"
     expect(result).to match "total"
     expect(result).to match "0.3"
@@ -48,7 +48,7 @@ describe Kantox::Chronoscope do
   it 'can attach to all methods of a class' do
     subject.attach(test)
     test.new.sleep_three_secs
-    result = ⌛
+    result = ⌛[:string]
     expect(result).to match "sleep_sec"
     expect(result).to match "sleep_three_secs"
     expect(result).to match "total"
@@ -58,7 +58,7 @@ describe Kantox::Chronoscope do
   it 'builds the tree in resulting report' do
     subject.attach(test2)
     test2.new.sleep_five_secs
-    result = ⌛
+    result = ⌛[:string]
     expect(result).to match "sleep_fifth_sec"
     expect(result).to match "sleep_sec"
     expect(result).to match "sleep_five_secs"
@@ -70,7 +70,7 @@ describe Kantox::Chronoscope do
     subject.attach(test2)
     test.new.sleep_three_secs
     test2.new.sleep_five_secs
-    result = ⌛
+    result = ⌛[:string]
     expect(result).to match "sleep_sec"
     expect(result).to match "sleep_three_secs"
     expect(result).to match "total"

@@ -55,11 +55,12 @@ module Kantox
       def ⌛(cleanup: true, count: 18, log: true) # Yes, 18 is my fave number)
         return if @@chronoscope_data.empty?
 
-        log_report(count).tap do |log_string|
-          LOGGER.debug(log_string) if log
+        log_report(count).tap do |log_hash|
+          LOGGER.debug(log_hash[:string]) if log
           puts '—' * 80
           puts @@chronoscope_data.inspect
           puts '—' * 80
+          log_hash[:data] = @@chronoscope_data.dup
           @@chronoscope_data.clear if cleanup
         end
       end
@@ -95,7 +96,7 @@ module Kantox
         average_len = [AVERAGE_LABEL.length, 8].max
         total = @@chronoscope_data.values.map { |v| v[:total] }.inject(:+).round(5)
 
-        [
+        as_string = [
           '',
           delim_label.first,
           [
@@ -118,10 +119,12 @@ module Kantox
               "#{COLOR_VIVID}#{bms[:total].round(5)}#{COLOR_NONE}"
             ].join
           end),
-          '—' * log_width,
+          "#{COLOR_PALE}#{'—' * log_width}#{COLOR_NONE}",
           "#{COLOR_VIVID}#{'total'.rjust(method_len, ' ')}#{COLOR_NONE}#{ARROW}#{' ' * TIMES_LABEL.length}#{COLOR_VIVID}#{total}#{COLOR_NONE}",
           delim_label.last
         ].flatten.join($/)
+
+        { data: @@chronoscope_data, string: as_string }
       end
 
       def log_width
