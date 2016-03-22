@@ -51,14 +51,15 @@ module Kantox
 
         methods.each do |m|
           next if m.to_s =~ /\A#{CHAIN_PREFIX}/ # skip wrappers
-          next if m.to_s.end_with?('=')         # skip attr_writers # FIXME: WTF?????
           next if methods.include?("#{CHAIN_PREFIX}#{m}".to_sym) # skip already wrapped functions
           next if (klazz.instance_method(m).parameters.to_h[:block] rescue false) # FIXME: report
 
+          arg_string = m.to_s.end_with?('=') ? 'arg' : '*args' # to satisfy setters
+
           klazz.class_eval %Q|
             alias_method :'#{CHAIN_PREFIX}#{m}', :'#{m}'
-            def #{m}(*args)
-              ⌚('#{klazz}##{m}', #{Kantox::Chronoscope.config.options!.silent && false || true}) { #{CHAIN_PREFIX}#{m} *args }
+            def #{m}(#{arg_string})
+              ⌚('#{klazz}##{m}', #{Kantox::Chronoscope.config.options!.silent && false || true}) { self.#{CHAIN_PREFIX}#{m} #{arg_string} }
             end
           |
         end

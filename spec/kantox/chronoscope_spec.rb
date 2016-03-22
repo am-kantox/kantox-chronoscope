@@ -31,10 +31,6 @@ end
 class Test3
   attr_accessor :var
 
-  def to_s
-    "var = [#{@var}], ⚑var = [#{@⚑var}]"
-  end
-
   def var?
     !@var.nil?
   end
