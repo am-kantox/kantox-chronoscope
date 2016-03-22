@@ -55,9 +55,6 @@ module Kantox
 
         log_report(count).tap do |log_hash|
           LOGGER.debug(log_hash[:string]) if log
-          puts '—' * 80
-          puts @@chronoscope_data.inspect
-          puts '—' * 80
           log_hash[:data] = @@chronoscope_data.dup
           @@chronoscope_data.clear if cleanup
         end
@@ -73,7 +70,7 @@ module Kantox
           BM_DELIMITER,
           "#{COLOR_PALE}#{@@chronoscope_data[arg.to_s][:total].round(3)}#{COLOR_NONE}",
           bm.to_s
-        ].join(' ')
+        ].join(' ').strip
       end
 
       def log_problem(arg, e)
