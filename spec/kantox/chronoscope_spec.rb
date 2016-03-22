@@ -29,6 +29,16 @@ class Test2
 end
 
 class Test3
+  attr_accessor :var
+
+  def to_s
+    "var = [#{@var}], ⚑var = [#{@⚑var}]"
+  end
+
+  def var?
+    !@var.nil?
+  end
+
   def simple_params(arg1, arg2)
     sleep 0.1
     arg1 + arg2
@@ -117,6 +127,11 @@ describe Kantox::Chronoscope do
   it 'handles any parameter type properly' do
     subject.attach(test3)
     inst = test3.new
+    expect(inst.var?).to be_falsey
+    expect(inst.var = 42).to eq(42)
+    expect(inst.var).to eq(42)
+    expect(inst.var?).to be_truthy
+
     expect(inst.simple_params(1, 2)).to eq(3)
     expect(inst.rest_params(1, 2, 3, 4)).to eq(10)
     expect(inst.hash_params(1, 2)).to eq(45)

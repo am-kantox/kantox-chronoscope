@@ -10,6 +10,8 @@ module Kantox
     module Generic; end
     module Dummy; end
 
+    CHAIN_PREFIX = '⚑'
+
     DEFAULT_ENV = :development
     CONFIG_LOCATION = 'config/chronoscope.yml'.freeze
 
@@ -34,6 +36,10 @@ module Kantox
                   end
     chronoscope.inject(general_config.top)
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     module ClassMethods
       # `methods` parameter accepts:
       #    none for all instance methods
@@ -43,13 +49,15 @@ module Kantox
         methods = klazz.instance_methods(false) if methods.empty?
 
         methods.each do |m|
-          next if m.to_s =~ /\A⚑/ || methods.include?("⚑#{m}".to_sym) # skip already wrapped functions
+          next if m.to_s =~ /\A#{CHAIN_PREFIX}/ # skip wrappers
+          next if m.to_s.end_with?('=')         # skip attr_writers # FIXME: WTF?????
+          next if methods.include?("#{CHAIN_PREFIX}#{m}".to_sym) # skip already wrapped functions
           next if (klazz.instance_method(m).parameters.to_h[:block] rescue false) # FIXME: report
 
           klazz.class_eval %Q|
-            alias_method '⚑#{m}', '#{m}'
-            def #{m} *args
-              ⌚('#{klazz}##{m}') { ⚑#{m}(*args) }
+            alias_method :'#{CHAIN_PREFIX}#{m}', :'#{m}'
+            def #{m}(*args)
+              ⌚('#{klazz}##{m}') { #{CHAIN_PREFIX}#{m} *args }
             end
           |
         end
@@ -57,6 +65,10 @@ module Kantox
         # FIXME: report
       end
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/CyclomaticComplexity
     extend ClassMethods
   end
 end
