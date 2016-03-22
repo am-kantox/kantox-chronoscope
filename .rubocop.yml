@@ -8,6 +8,11 @@ Style/AsciiIdentifiers:
     - 'lib/**/*'
     - 'spec/**/*'
 
+Style/AsciiComments:
+  Exclude:
+    - 'lib/**/*'
+    - 'spec/**/*'
+
 Style/VariableName:
   Exclude:
     - 'lib/**/*'

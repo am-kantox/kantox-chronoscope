@@ -4,11 +4,12 @@ require 'kungfuig'
 require 'hashie/mash'
 
 require "kantox/chronoscope/version"
-require "kantox/chronoscope/dummy"
-require "kantox/chronoscope/generic"
 
 module Kantox
   module Chronoscope
+    module Generic; end
+    module Dummy; end
+
     DEFAULT_ENV = :development
     CONFIG_LOCATION = 'config/chronoscope.yml'.freeze
 
@@ -18,6 +19,8 @@ module Kantox
 
     ENV = const_defined?('Rails') && Rails.env || ENV['CHRONOSCOPE_ENV'] || DEFAULT_ENV
 
+    require "kantox/chronoscope/dummy"
+    require "kantox/chronoscope/generic"
     general_config = option(ENV, :general) || Hashie::Mash.new
     chronoscope = if general_config.enable
                     begin
@@ -27,7 +30,7 @@ module Kantox
                       Kantox::Chronoscope::Generic
                     end
                   else
-                    Dummy
+                    Kantox::Chronoscope::Dummy
                   end
     chronoscope.inject(general_config.top)
 
@@ -40,13 +43,13 @@ module Kantox
         methods = klazz.instance_methods(false) if methods.empty?
 
         methods.each do |m|
-          next if m.to_s =~ /\A∃/ || methods.include?("∃#{m}".to_sym)   # skip already wrapped functions
+          next if m.to_s =~ /\A⚑/ || methods.include?("⚑#{m}".to_sym)   # skip already wrapped functions
           next if klazz.instance_method(m).parameters.to_h[:block]      # FIXME: report
 
           klazz.class_eval %Q|
-            alias_method '∃#{m}', '#{m}'
+            alias_method '⚑#{m}', '#{m}'
             def #{m} *args
-              ⌚('#{klazz}##{m}') { ∃#{m}(*args) }
+              ⌚('#{klazz}##{m}') { ⚑#{m}(*args) }
             end
           |
         end
@@ -55,16 +58,5 @@ module Kantox
       end
     end
     extend ClassMethods
-  end
-end
-
-module Kantox
-  module Chronoscope
-    module Generic
-      COLOR_VIVID = "\033[#{Kantox::Chronoscope.config.colors!.vivid || '01;38;05;226'}m".freeze
-      COLOR_PALE  = "\033[#{Kantox::Chronoscope.config.colors!.pale || '01;38;05;178'}m".freeze
-      COLOR_WARN  = "\033[#{Kantox::Chronoscope.config.colors!.warn || '01;38;05;214'}m".freeze
-      LOGGER = Kantox::Chronoscope.config.logger || Rails.logger rescue Logger.new(STDOUT)
-    end
   end
 end

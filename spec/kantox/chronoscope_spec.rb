@@ -11,8 +11,16 @@ class Test1
 end
 
 class Test2
+  def raise_error
+    raise ArgumentError, 'Hey, I am an argument error'
+  end
+
+  def sleep_fifth_sec
+    sleep 0.02
+  end
+
   def sleep_sec
-    sleep 0.1
+    5.times { sleep_fifth_sec }
   end
 
   def sleep_five_secs
@@ -47,6 +55,16 @@ describe Kantox::Chronoscope do
     expect(result).to match "0.3"
   end
 
+  it 'builds the tree in resulting report' do
+    subject.attach(test2)
+    test2.new.sleep_five_secs
+    result = ⌛
+    expect(result).to match "sleep_fifth_sec"
+    expect(result).to match "sleep_sec"
+    expect(result).to match "sleep_five_secs"
+    expect(result).to match "total"
+  end
+
   it 'can distinguish methods with same names from different classes' do
     subject.attach(test)
     subject.attach(test2)
@@ -56,8 +74,13 @@ describe Kantox::Chronoscope do
     expect(result).to match "sleep_sec"
     expect(result).to match "sleep_three_secs"
     expect(result).to match "total"
-    expect(result).to match "0.3"
-    expect(result).to match "0.5"
-    expect(result).to match "1.6"
+    expect(result).to match(/25.*?::.*?0.5/)
+    expect(result).to match(/1.*?::.*?0.5/)
+    expect(result).to match(/1.*?::.*?0.3/)
+  end
+
+  it 'handles the exceptions raised from wrapped methods' do
+    subject.attach(test2)
+    expect { test2.new.raise_error }.to raise_error(ArgumentError)
   end
 end
