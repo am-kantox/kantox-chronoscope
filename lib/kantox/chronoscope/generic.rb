@@ -47,6 +47,7 @@ module Kantox
           @@★.shift
         end
       end
+      alias_method :watch, :⌚
 
       # FIXME: total currently adds up all calls, including nested
       #        I am not sure if it is correct ot not, so leaving it for now
@@ -55,10 +56,11 @@ module Kantox
 
         log_report(count).tap do |log_hash|
           LOGGER.debug(log_hash[:string]) if log
-          log_hash[:data] = @@chronoscope_data.dup
+          log_hash[:data] = @@chronoscope_data.map { |k, v| [k, v.dup] }.to_h
           @@chronoscope_data.clear if cleanup
         end
       end
+      alias_method :harvest, :⌛
 
       def log_bm(arg, bm)
         [

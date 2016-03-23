@@ -106,13 +106,16 @@ describe Kantox::Chronoscope do
     subject.attach(test2)
     test.new.sleep_three_secs
     test2.new.sleep_five_secs
-    result = ⌛[:string]
+    result = harvest
+    result, data = result[:string], result[:data]
     expect(result).to match "sleep_sec"
     expect(result).to match "sleep_three_secs"
     expect(result).to match "total"
     expect(result).to match(/25.*?::.*?0.5/)
     expect(result).to match(/1.*?::.*?0.5/)
     expect(result).to match(/1.*?::.*?0.3/)
+    expect(data).to be_a(Hash)
+    expect(data.inspect).to match(/:stack=>\["Test2#sleep_sec", "Test2#sleep_five_secs"\]/)
   end
 
   it 'handles the exceptions raised from wrapped methods' do
