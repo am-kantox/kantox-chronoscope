@@ -46,9 +46,10 @@ module Kantox
       # `methods` parameter accepts:
       #    none for all instance methods
       #    :method for explicit method
-      def attach(klazz, *methods)
+      def attach(klazz, *methods, cms: nil)
         klazz = Kernel.const_get(klazz) unless klazz.is_a?(Class)
         methods = klazz.instance_methods(false) if methods.empty?
+        do_log = !option(ENV, 'options.silent')
 
         methods.each do |m|
           next if m.to_s =~ /\A#{CHAIN_PREFIX}/ # skip wrappers
@@ -56,7 +57,6 @@ module Kantox
           next if (klazz.instance_method(m).parameters.to_h[:block] rescue false) # FIXME: report
 
           receiver, arg_string = m.to_s.end_with?('=') ? ['self.', 'arg'] : [nil, '*args'] # to satisfy setter
-          do_log = !option(ENV, 'options.silent')
 
           klazz.class_eval %Q|
             alias_method :'#{CHAIN_PREFIX}#{m}', :'#{m}'
@@ -65,6 +65,26 @@ module Kantox
             end
           |
         end
+
+        # class methods now
+        return unless cms
+        cms = [*cms]
+        cms = klazz.methods(false) if cms.empty?
+        cms.each do |m|
+          next if m.to_s =~ /\A#{CHAIN_PREFIX}/ # skip wrappers
+          next if methods.include?("#{CHAIN_PREFIX}#{m}".to_sym) # skip already wrapped functions
+          next if (klazz.instance_method(m).parameters.to_h[:block] rescue false) # FIXME: report
+
+          klazz.class_eval %Q|
+            class << self
+              alias_method :'#{CHAIN_PREFIX}#{m}', :'#{m}'
+              def #{m}(*args)
+                ⌚('#{klazz}::#{m}', #{do_log}) { #{klazz}.#{CHAIN_PREFIX}#{m} *args }
+              end
+            end
+          |
+        end
+
       rescue NameError
         Generic::LOGGER.debug [
           "  #{Generic::COLOR_WARN}[#{Generic::LOGGER_TAG}] ERROR#{Generic::COLOR_NONE} #{Generic::BM_DELIMITER} “#{Generic::COLOR_WARN}#{e.message}#{Generic::COLOR_NONE}”",

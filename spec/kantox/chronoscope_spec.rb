@@ -63,10 +63,20 @@ class Test3
   # rubocop:enable Performance/RedundantBlockCall
 end
 
+class Test4
+  class << self
+    def c_m1(arg, *args, param: 42, **params)
+      sleep 0.1
+      [arg, *args].inject(&:+) + param + params.values.inject(&:+)
+    end
+  end
+end
+
 describe Kantox::Chronoscope do
   let(:test) { Test1 }
   let(:test2) { Test2 }
   let(:test3) { Test3 }
+  let(:test4) { Test4 }
 
   it 'has a version number' do
     expect(Kantox::Chronoscope::VERSION).not_to be nil
@@ -138,5 +148,12 @@ describe Kantox::Chronoscope do
     expect(inst.splat_params(1, 2, a: 3, b: 4)).to eq(52)
     expect(inst.splat_params(1, 2, param: 3, a: 4)).to eq(10)
     expect(inst.block_params(1, 2, param: 3, a: 4) { 32 }).to eq(42)
+  end
+
+  it 'handles class methods properly' do
+    subject.attach(test4, cms: :c_m1)
+    inst = test4
+
+    expect(inst.c_m1(1, 2, param: 3, a: 4)).to eq(10)
   end
 end
