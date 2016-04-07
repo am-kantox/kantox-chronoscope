@@ -31,5 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry', '~> 0.10'
   spec.add_development_dependency 'awesome_print', '~> 1'
 
-  spec.add_dependency 'kungfuig', '~> 0.3'
+  spec.add_dependency 'kungfuig', '~> 0.5'
 end

@@ -117,7 +117,9 @@ describe Kantox::Chronoscope do
     test.new.sleep_three_secs
     test2.new.sleep_five_secs
     result = harvest
-    result, data = result[:string], result[:data]
+    # rubocop:disable Style/ParallelAssignment
+    result, data = [result[:string], result[:data]]
+    # rubocop:enable Style/ParallelAssignment
     expect(result).to match "sleep_sec"
     expect(result).to match "sleep_three_secs"
     expect(result).to match "total"

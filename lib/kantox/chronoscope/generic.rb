@@ -2,19 +2,19 @@ module Kantox
   module Chronoscope
     # Dummy module to be used in production-like environments.
     module Generic
-      COLOR_VIVID   = "\033[#{Kantox::Chronoscope.config.colors!.vivid || '01;38;05;226'}m".freeze
-      COLOR_PALE    = "\033[#{Kantox::Chronoscope.config.colors!.pale || '01;38;05;178'}m".freeze
-      COLOR_WARN    = "\033[#{Kantox::Chronoscope.config.colors!.warn || '01;38;05;173'}m".freeze
-      LOGGER        = Kantox::Chronoscope.config.logger && Kernel.const_get(Kantox::Chronoscope.config.logger).new ||
+      COLOR_VIVID   = "\033[#{Kantox::Chronoscope.kungfuig.colors!.vivid || '01;38;05;226'}m".freeze
+      COLOR_PALE    = "\033[#{Kantox::Chronoscope.kungfuig.colors!.pale || '01;38;05;178'}m".freeze
+      COLOR_WARN    = "\033[#{Kantox::Chronoscope.kungfuig.colors!.warn || '01;38;05;173'}m".freeze
+      LOGGER        = Kantox::Chronoscope.kungfuig.logger && Kernel.const_get(Kantox::Chronoscope.kungfuig.logger).new ||
                       Kernel.const_defined?(:Rails) && ::Rails.logger ||
                       Logger.new(STDOUT)
 
-      BM_DELIMITER  = (Kantox::Chronoscope.config.i18n!.bm_delimiter || ' :: ').to_s.freeze
-      ARROW         = (Kantox::Chronoscope.config.i18n!.arrow || '  ⇒  ').to_s.freeze
-      METHOD_LABEL  = Kantox::Chronoscope.config.i18n!.name || 'method'.freeze
-      TIMES_LABEL   = Kantox::Chronoscope.config.i18n!.times || 'times'.freeze
-      AVERAGE_LABEL = Kantox::Chronoscope.config.i18n!.average || 'average'.freeze
-      TOTAL_LABEL   = Kantox::Chronoscope.config.i18n!.total || 'total'.freeze
+      BM_DELIMITER  = (Kantox::Chronoscope.kungfuig.i18n!.bm_delimiter || ' :: ').to_s.freeze
+      ARROW         = (Kantox::Chronoscope.kungfuig.i18n!.arrow || '  ⇒  ').to_s.freeze
+      METHOD_LABEL  = Kantox::Chronoscope.kungfuig.i18n!.name || 'method'.freeze
+      TIMES_LABEL   = Kantox::Chronoscope.kungfuig.i18n!.times || 'times'.freeze
+      AVERAGE_LABEL = Kantox::Chronoscope.kungfuig.i18n!.average || 'average'.freeze
+      TOTAL_LABEL   = Kantox::Chronoscope.kungfuig.i18n!.total || 'total'.freeze
 
       COLOR_NONE    = "\033[0m".freeze
       DEFAULT_TAG   = 'N/A'.freeze
@@ -47,7 +47,7 @@ module Kantox
           @@★.shift
         end
       end
-      alias_method :watch, :⌚
+      alias watch ⌚
 
       # FIXME: total currently adds up all calls, including nested
       #        I am not sure if it is correct ot not, so leaving it for now
@@ -60,7 +60,7 @@ module Kantox
           @@chronoscope_data.clear if cleanup
         end
       end
-      alias_method :harvest, :⌛
+      alias harvest ⌛
 
       def log_bm(arg, bm)
         [

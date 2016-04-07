@@ -9,6 +9,7 @@ module Kantox
       end
 
       def ⌛(*args)
+        {}
       end
       # rubocop:enable Style/OpMethod
       # rubocop:enable Style/MethodName
