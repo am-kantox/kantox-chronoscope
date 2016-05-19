@@ -1,6 +1,9 @@
 # Kantox::Chronoscope
 
 [![Build Status](https://travis-ci.org/am-kantox/kantox-chronoscope.svg?branch=master)](https://travis-ci.org/am-kantox/kantox-chronoscope)
+[![Code Climate](https://codeclimate.com/github/am-kantox/kantox-chronoscope/badges/gpa.svg)](https://codeclimate.com/github/am-kantox/kantox-chronoscope)
+[![Test Coverage](https://codeclimate.com/github/am-kantox/kantox-chronoscope/badges/coverage.svg)](https://codeclimate.com/github/am-kantox/kantox-chronoscope/coverage)
+[![Issue Count](https://codeclimate.com/github/am-kantox/kantox-chronoscope/badges/issue_count.svg)](https://codeclimate.com/github/am-kantox/kantox-chronoscope)
 
 `Chronoscope` is designed for those, who has not enough foresight and starts
 benchmarking/profiling their applications when everything already is terrible.
