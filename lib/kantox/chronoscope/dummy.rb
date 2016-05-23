@@ -8,7 +8,7 @@ module Kantox
         yield(*args) if block_given?
       end
 
-      def ⌛(*args)
+      def ⌛(*)
         {}
       end
       # rubocop:enable Style/OpMethod
