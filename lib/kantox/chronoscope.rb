@@ -16,8 +16,9 @@ module Kantox
     CONFIG_LOCATION = 'config/chronoscope.yml'.freeze
 
     include Kungfuig
-    kungfuig(File.join(File.expand_path('..', __FILE__), CONFIG_LOCATION)) rescue nil # FIXME: report
     kungfuig(CONFIG_LOCATION) rescue nil # FIXME: report
+    kungfuig(File.join(File.expand_path('..', __FILE__), CONFIG_LOCATION)) rescue nil # FIXME: report
+    kungfuig(File.join(Rails.root, CONFIG_LOCATION)) rescue nil
 
     ENV = const_defined?('Rails') && Rails.env || ENV['CHRONOSCOPE_ENV'] || DEFAULT_ENV
 

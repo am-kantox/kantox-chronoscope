@@ -5,8 +5,16 @@ general:
 options:
   silent: true
 
+lang: :en
+
 i18n:
-  name: метод
-  times: раз
-  average: среднее
-  total: всего
+  en:
+    name: method
+    times: times
+    average: average
+    total: total
+  ru:
+    name: метод
+    times: раз
+    average: среднее
+    total: всего

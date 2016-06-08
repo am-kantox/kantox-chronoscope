@@ -9,12 +9,14 @@ module Kantox
                       Kernel.const_defined?(:Rails) && ::Rails.logger ||
                       Logger.new(STDOUT)
 
-      BM_DELIMITER  = (Kantox::Chronoscope.kungfuig.i18n!.bm_delimiter || ' :: ').to_s.freeze
-      ARROW         = (Kantox::Chronoscope.kungfuig.i18n!.arrow || '  ⇒  ').to_s.freeze
-      METHOD_LABEL  = Kantox::Chronoscope.kungfuig.i18n!.name || 'method'.freeze
-      TIMES_LABEL   = Kantox::Chronoscope.kungfuig.i18n!.times || 'times'.freeze
-      AVERAGE_LABEL = Kantox::Chronoscope.kungfuig.i18n!.average || 'average'.freeze
-      TOTAL_LABEL   = Kantox::Chronoscope.kungfuig.i18n!.total || 'total'.freeze
+      LANG          = Kantox::Chronoscope.kungfuig.lang || :en
+      I18N          = Kantox::Chronoscope.kungfuig.i18n!.public_send("#{LANG}!")
+      BM_DELIMITER  = (I18N.bm_delimiter || ' :: ').to_s.freeze
+      ARROW         = (I18N.arrow || '  ⇒  ').to_s.freeze
+      METHOD_LABEL  = (I18N.name || 'method').freeze
+      TIMES_LABEL   = (I18N.times || 'times').freeze
+      AVERAGE_LABEL = (I18N.average || 'average').freeze
+      TOTAL_LABEL   = (I18N.total || 'total').freeze
 
       COLOR_NONE    = "\033[0m".freeze
       DEFAULT_TAG   = 'N/A'.freeze
