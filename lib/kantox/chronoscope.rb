@@ -86,7 +86,7 @@ module Kantox
           |
         end
 
-      rescue NameError
+      rescue NameError => e
         Generic::LOGGER.debug [
           "  #{Generic::COLOR_WARN}[#{Generic::LOGGER_TAG}] ERROR#{Generic::COLOR_NONE} #{Generic::BM_DELIMITER} “#{Generic::COLOR_WARN}#{e.message}#{Generic::COLOR_NONE}”",
           e.backtrace.map { |s| "#{Generic::COLOR_WARN}#{s}#{Generic::COLOR_NONE}" }
