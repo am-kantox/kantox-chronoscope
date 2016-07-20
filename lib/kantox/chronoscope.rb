@@ -57,7 +57,7 @@ module Kantox
           next if methods.include?("#{CHAIN_PREFIX}#{m}".to_sym) # skip already wrapped functions
           next if (klazz.instance_method(m).parameters.to_h[:block] rescue false) # FIXME: report
 
-          receiver, arg_string = m.to_s.end_with?('=') ? ['self.', 'arg'] : [nil, '*args'] # to satisfy setter
+          receiver, arg_string = (m.to_s =~ /[^\p{L}?]\z/) ? ['self.', 'arg'] : [nil, '*args'] # to satisfy setter
 
           klazz.class_eval %Q|
             alias_method :'#{CHAIN_PREFIX}#{m}', :'#{m}'
