@@ -133,9 +133,9 @@ module Kantox
       end
 
       def log_width
-        # rubocop:disable Style/RescueModifier
-        $stdin.winsize.last - 10 rescue 80
-        # rubocop:enable Style/RescueModifier
+        ($stdin.winsize.last.nonzero? || 90) - 10
+      rescue
+        80
       end
 
       protected :log_problem, :log_bm, :log_report, :log_width
