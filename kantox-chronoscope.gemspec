@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'pry', '~> 0.10'
   spec.add_development_dependency 'awesome_print', '~> 1'
-  spec.add_development_dependency 'codeclimate-test-reporter'
+  spec.add_development_dependency 'simplecov'
 
   spec.add_dependency 'kungfuig', '~> 0.7'
 end
